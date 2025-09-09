@@ -1,0 +1,13 @@
+import fastf1 as ff1
+import fastf1.plotting
+import pandas as pd # Kita butuh pandas untuk mengolah data
+import matplotlib.pyplot as plt
+
+# Setup plotting (termasuk warning fix)
+fastf1.plotting.setup_mpl(misc_mpl_mods=False, color_scheme='fastf1')
+
+# Muat sesi kualifikasi MONZA GP 2025
+print("Memuat data sesi kualifikasi Monza GP 2025...")
+session_quali = ff1.get_session(2025, 'Monza', 'Q')
+session_quali.load()
+print("Data berhasil dimuat!")
