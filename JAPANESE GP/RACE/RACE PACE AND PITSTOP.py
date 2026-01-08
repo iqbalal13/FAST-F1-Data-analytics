@@ -9,7 +9,7 @@ import os
 # CONFIG
 # =============================
 YEAR = 2025
-GP = "Spain"
+GP = "Japan"
 SESSION = "R"
 CACHE_DIR = "cache"
 
@@ -99,7 +99,7 @@ for drv in drivers:
 # LABELS
 # =============================
 plt.title(
-    "Race Pace, Tyre & Pit Stop Analysis – Top 10\nSpain GP 2025",
+    "Race Pace, Tyre & Pit Stop Analysis – Top 10\nJapan GP 2025",
     fontsize=15
 )
 plt.xlabel("Lap Number")
