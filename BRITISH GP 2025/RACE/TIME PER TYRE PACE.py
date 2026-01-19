@@ -6,7 +6,7 @@ from pathlib import Path
 
 # ========= CONFIG =========
 YEAR = 2025
-GP = "Spain Grand Prix"
+GP = "British Grand Prix"
 SESSION = "R"
 TOP_N = 10
 CACHE_DIR = Path("/content/fastf1_cache")
