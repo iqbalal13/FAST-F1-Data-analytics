@@ -15,7 +15,7 @@ fastf1.plotting.setup_mpl(misc_mpl_mods=False)
 # CONFIG
 # ===============================
 YEAR = 2025
-RACE_NAME = "Circuit Of The Americas"
+RACE_NAME = "United States"
 SESSION = "Q"
 
 # ===============================
