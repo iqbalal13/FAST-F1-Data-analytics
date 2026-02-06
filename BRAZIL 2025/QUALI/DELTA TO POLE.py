@@ -61,7 +61,7 @@ plt.bar(
     edgecolor="black"
 )
 
-plt.title("Delta to Pole – Qualifying\Brazil GP 2025", fontsize=16)
+plt.title("Delta to Pole – Qualifying\Brazilian GP 2025", fontsize=16)
 plt.xlabel("Driver")
 plt.ylabel("Delta to Pole (seconds)")
 plt.grid(axis="y", linestyle="--", alpha=0.5)
