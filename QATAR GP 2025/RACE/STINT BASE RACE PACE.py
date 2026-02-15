@@ -6,7 +6,7 @@ from pathlib import Path
 
 # ========= CONFIG =========
 YEAR = 2025
-GP = "Brazilian"
+GP = "Qatar"
 SESSION = "R"
 TOP_N = 10
 CACHE_DIR = Path("/content/fastf1_cache")
@@ -80,7 +80,7 @@ for (d, stint), dl in laps.groupby(["Driver", "Stint"]):
         label=f"{d} | Stint {stint} | {compound}"
     )
 
-plt.title("Top 10 – Stint-based Race Pace\n(Brazilian GP 2025)")
+plt.title("Top 10 – Stint-based Race Pace\n(Qatar GP 2025)")
 plt.xlabel("Lap Number")
 plt.ylabel("Lap Time (s)")
 plt.grid(alpha=0.3)
