@@ -41,7 +41,7 @@ for compound in df["Compound"].unique():
 
     plt.title(
         f"Top 10 – Stint-based Pace & Tyre Degradation\n"
-        f"{compound} | Brazilian GP 2025",
+        f"{compound} | Abu Dhabi GP 2025",
         fontsize=14,
         pad=20
     )
