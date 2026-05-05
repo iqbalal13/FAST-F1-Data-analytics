@@ -10,7 +10,7 @@ import numpy as np
 # ===============================
 # CONFIG
 # ===============================
-YEAR = 2025
+YEAR = 2026
 RACE_NAME = "Miami Grand Prix"
 SESSION_TYPE = "Q"
 MAX_RETRY = 3
