@@ -9,7 +9,7 @@ import os
 # CONFIG
 # =============================
 YEAR = 2026
-GP = "Miami"
+GP = "Monaco"
 SESSION = "R"
 
 CACHE_DIR = "cache"
