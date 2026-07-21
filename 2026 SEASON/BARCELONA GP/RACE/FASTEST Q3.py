@@ -1,146 +1,108 @@
-import os
+
 import fastf1
 import fastf1.plotting
-import matplotlib.pyplot as plt
-import pandas as pd
 
-# ======================================================
-# CACHE
-# ======================================================
-CACHE_DIR = "/content/fastf1_cache"
-os.makedirs(CACHE_DIR, exist_ok=True)
-fastf1.Cache.enable_cache(CACHE_DIR)
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import pandas as pd
+import os
+
+# ==========================
+# Cache
+# ==========================
+cache_dir = "cache"
+os.makedirs(cache_dir, exist_ok=True)
+fastf1.Cache.enable_cache(cache_dir)
 
 fastf1.plotting.setup_mpl(misc_mpl_mods=False)
 
-print("FastF1 Version:", fastf1.__version__)
-
-# ======================================================
-# CONFIG
-# ======================================================
+# ==========================
+# Load Session
+# ==========================
 YEAR = 2026
-RACE_NAME = "Catalunya"
+ROUND = 7
 SESSION = "Q"
 
-# ======================================================
-# LOAD SESSION
-# ======================================================
-session = fastf1.get_session(YEAR, RACE_NAME, SESSION)
+session = fastf1.get_session(YEAR, ROUND, SESSION)
+session.load()
 
-try:
-    session.load()
-except Exception as e:
-    print("Warning ketika load session:")
-    print(e)
-
-# ======================================================
-# RESULTS
-# ======================================================
+# ==========================
+# Prepare Data
+# ==========================
 results = session.results.copy()
 
-if results.empty:
-    raise ValueError("Session berhasil dimuat tetapi results kosong.")
+results = (
+    results
+    .dropna(subset=["Q3"])
+    .sort_values("Q3")
+    .head(10)
+)
 
-results = results.dropna(subset=["Q3"])
-
-results["Q3"] = pd.to_timedelta(results["Q3"])
-
-pole_time = results["Q3"].min()
+pole_time = results.iloc[0]["Q3"]
 
 results["Delta"] = (
     results["Q3"] - pole_time
 ).dt.total_seconds()
 
-results = results.sort_values("Delta")
+# ==========================
+# Colors (P1-P10)
+# ==========================
+colors = [
+    "#FFD700",  # Gold
+    "#C0C0C0",  # Silver
+    "#CD7F32",  # Bronze
+    "#1F77B4",
+    "#2CA02C",
+    "#D62728",
+    "#9467BD",
+    "#8C564B",
+    "#E377C2",
+    "#7F7F7F"
+]
 
-# ======================================================
-# TEAM COLORS (MANUAL)
-# ======================================================
-TEAM_COLORS = {
+# ==========================
+# Plot
+# ==========================
+fig, ax = plt.subplots(figsize=(11,7))
 
-    "McLaren": "#FF8000",
-    "Ferrari": "#DC0000",
-    "Mercedes": "#00D2BE",
-    "Red Bull": "#1E41FF",
-    "Red Bull Racing": "#1E41FF",
-    "Oracle Red Bull Racing": "#1E41FF",
-
-    "Williams": "#005AFF",
-
-    "Aston Martin": "#006F62",
-    "Aston Martin Aramco": "#006F62",
-
-    "Alpine": "#0090FF",
-    "BWT Alpine": "#0090FF",
-
-    "Kick Sauber": "#00E701",
-    "Sauber": "#00E701",
-    "Stake F1 Team Kick Sauber": "#00E701",
-
-    "Haas": "#B6BABD",
-    "Haas F1 Team": "#B6BABD",
-    "MoneyGram Haas F1 Team": "#B6BABD",
-
-    "Racing Bulls": "#6692FF",
-    "Visa Cash App RB": "#6692FF",
-    "Visa Cash App Racing Bulls": "#6692FF",
-
-    "RB": "#6692FF"
-}
-
-colors = []
-
-for team in results["TeamName"]:
-
-    color = TEAM_COLORS.get(team)
-
-    if color is None:
-        print(f"Team belum dikenali: {team}")
-        color = "#808080"
-
-    colors.append(color)
-
-# ======================================================
-# DEBUG
-# ======================================================
-print(results[["Abbreviation", "TeamName"]])
-
-print(colors)
-
-# ======================================================
-# PLOT
-# ======================================================
-plt.figure(figsize=(14,7))
-
-bars = plt.bar(
+bars = ax.barh(
     results["Abbreviation"],
     results["Delta"],
-    color=colors,
-    edgecolor="black",
-    linewidth=1
+    color=colors
 )
 
-plt.title(
-    f"Delta to Pole - {RACE_NAME} {YEAR} Qualifying",
-    fontsize=16
-)
+ax.invert_yaxis()
 
-plt.xlabel("Driver", fontsize=12)
-plt.ylabel("Delta to Pole (seconds)", fontsize=12)
-
-plt.grid(axis="y", linestyle="--", alpha=0.4)
-
-for bar, delta in zip(bars, results["Delta"]):
-
-    plt.text(
-        bar.get_x() + bar.get_width()/2,
+for i, delta in enumerate(results["Delta"]):
+    ax.text(
         delta + 0.01,
-        f"+{delta:.3f}",
-        ha="center",
-        va="bottom",
-        fontsize=9
+        i,
+        f"+{delta:.3f}s",
+        va="center",
+        fontsize=10
     )
 
-plt.tight_layout()
+ax.set_xlabel("Delta to Pole (seconds)", fontsize=12)
+ax.set_ylabel("Driver", fontsize=12)
 
+ax.set_title(
+    f"{session.event['EventName']} {YEAR}\nQualifying Q3 Delta (Top 10)",
+    fontsize=15,
+    weight="bold"
+)
+
+ax.grid(axis="x", linestyle="--", alpha=0.4)
+
+legend_handles = [
+    mpatches.Patch(color=colors[i], label=f"P{i+1}")
+    for i in range(10)
+]
+
+ax.legend(
+    handles=legend_handles,
+    bbox_to_anchor=(1.02,1),
+    loc="upper left"
+)
+
+plt.tight_layout()
 plt.show()
